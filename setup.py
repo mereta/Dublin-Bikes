@@ -4,7 +4,7 @@ Helpful resource:
 https://docs.python.org/3.6/distutils/setupscript.html
 """
 
-from distutils.core import setup, find_packages
+from setuptools import setup, find_packages
 
 setup(
     name="dublin_bikes",
