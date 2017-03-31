@@ -4,7 +4,7 @@
 
 Requires python3, pip, and git.
 
-    $ pip install git +https://github.com/ucd2017comp30670/DublinBikes.git
+    $ pip install git+https://github.com/ucd2017comp30670/DublinBikes.git
 
 ## To run the installed application:
 
