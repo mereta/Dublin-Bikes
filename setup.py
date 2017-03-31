@@ -4,7 +4,7 @@ Helpful resource:
 https://docs.python.org/3.6/distutils/setupscript.html
 """
 
-from distutils.core import setup
+from distutils.core import setup, find_packages
 
 setup(
     name="dublin_bikes",
@@ -13,8 +13,10 @@ setup(
     author="Andrew Cameron, Liga Ozolina, Mereta Degutyte, Laura Boyles",
     author_email="andrew.cameron1@ucdconnect.ie",
     keywords="Dublin bikes weather",
-    packages=["src"],
+    packages=find_packages(),
     package_dir={"src": "src"},
+    include_package_data=True,
+    zip_safe=False,
     install_requires=open("requirements.txt", "rt").readlines(),
     entry_points={'console_scripts': ['dublin-bikes = src.main:main']}
 )
