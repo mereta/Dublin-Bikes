@@ -18,5 +18,5 @@ setup(
     include_package_data=True,
     zip_safe=False,
     install_requires=open("requirements.txt", "rt").readlines(),
-    entry_points={'console_scripts': ['dublin-bikes = src.main:main']}
+    entry_points={'console_scripts': ['dublin-bikes = src.app:main']}
 )
