@@ -14,5 +14,5 @@ setup(
     author_email="andrew.cameron1@ucdconnect.ie",
     keywords="Dublin bikes weather",
     install_requires=open("requirements.txt", "rt").readlines(),
-    entry_points={'console_scripts': ['dublin-bikes = src.__main__:main']}
+    entry_points={'console_scripts': ['dublin-bikes = __main__:main']}
 )
