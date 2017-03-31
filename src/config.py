@@ -1,10 +1,10 @@
+# See http://flask.pocoo.org/docs/0.12/config/  for flask config options.
 
-development_config = {
-    "debug": True,
-    "SERVER_NAME": ("127.0.0.1", 80)
-}
 
-production_config = {
-    "debug": False,
-    "SERVER_NAME": ("127.0.0.1", 80)
-}
+class DevelopmentConfig:
+    DEBUG = True
+
+
+class ProductionConfig:
+    DEBUG = False
+    SERVER_NAME = "127.0.0.1:80"
