@@ -13,6 +13,8 @@ setup(
     author="Andrew Cameron, Liga Ozolina, Mereta Degutyte, Laura Boyles",
     author_email="andrew.cameron1@ucdconnect.ie",
     keywords="Dublin bikes weather",
+    # packages=[],
+    #package_dir={"": "src"},
     install_requires=open("requirements.txt", "rt").readlines(),
-    entry_points={'console_scripts': ['dublin-bikes = __main__:main']}
+    entry_points={'console_scripts': ['dublin-bikes = src.__main__:main']}
 )
