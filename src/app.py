@@ -1,6 +1,12 @@
 from flask import Flask, render_template, url_for
 
-import config
+
+try:
+    # when running locally...
+    import config
+except ImportError:
+    # when installed and running from the command line...
+    from . import config
 
 # Flask likes to know the name of the script calling it.
 app = Flask(__name__)
