@@ -1,20 +1,15 @@
-<html>
+<!DOCTYPE html>
+    <html>
+    <head>
+          
+            {{sndmap.js}}
+    </head>
+    <body>
+        <h1>Current Dublin Bikes Occupancy per Station</h1>
 
-<head>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/index.css') }}">
-    <script src="{{ url_for('static', filename='scripts/index.js') }}"></script>
+        <h2>Dublin Bikes Map</h2>
+        <h3> Click on Station for more info</h3>
+        {{sndmap.html}}
 
-    <title>
-
-    </title>
-</head>
-
-<body>
-
-    <h1>This is the header</h1>
-
-    <p>This is the paragraph</p>
-
-</body>
-
+    </body>
 </html>
