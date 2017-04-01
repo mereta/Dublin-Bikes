@@ -32,13 +32,18 @@ def index():
         free = obj['available_bikes']
         available_bike_stands = obj['available_bike_stands']
         
-        
+        if free > 0:
     #Code reference: https://github.com/rochacbruno/Flask-GoogleMaps
-        sndmap.markers.append({ 'icon': 'http://maps.google.com/mapfiles/ms/icons/green-dot.png',
+            sndmap.markers.append({ 'icon': 'http://maps.google.com/mapfiles/ms/icons/green-dot.png',
+            'lat': lat,
+            'lng': lng,
+            'infobox': "<b>Name: " + name + "</b></br>Available Bikes: " + str(free) + "</br>Available Bike Stands: " + str(available_bike_stands) })
+        else:
+            sndmap.markers.append({ 'icon': 'http://maps.google.com/mapfiles/ms/icons/red-dot.png',
              'lat': lat,
              'lng': lng,
              'infobox': "<b>Name: " + name + "</b></br>Available Bikes: " + str(free) + "</br>Available Bike Stands: " + str(available_bike_stands) })
-
+            
     print(sndmap.markers)   
     return render_template("index.html", sndmap=sndmap)
 
