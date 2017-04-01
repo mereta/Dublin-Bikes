@@ -2,7 +2,6 @@ from flask import Flask, render_template, url_for
 from flask_googlemaps import GoogleMaps
 from flask_googlemaps import Map
 import LoadJSONdata
-import decimal
 
 try:
     # when running locally...
@@ -18,7 +17,8 @@ GoogleMaps(app)
 
 @app.route("/")
 def index():
-
+    '''This method retrieves data from the Dublin Bikes API, it itterates through the data
+    and presents markers on a google map'''
   
   
     mydata = LoadJSONdata.GetLocationData()
@@ -26,17 +26,14 @@ def index():
     sndmap = Map("sndmap",mydata[0]["position"]["lat"], mydata[0]["position"]["lng"], style="height:600px;width:600px;margin:0;")
     for obj in mydata:
         name = obj["name"]
-        address = obj["address"]
         lat = str(obj["position"]["lat"])
         time_stamp = obj['last_update']
         lng = str(obj["position"]["lng"])
         free = obj['available_bikes']
-        number = obj["number"]
-        bike_stands = obj["bike_stands"]
         available_bike_stands = obj['available_bike_stands']
         
         
-    
+    #Code reference: https://github.com/rochacbruno/Flask-GoogleMaps
         sndmap.markers.append({ 'icon': 'http://maps.google.com/mapfiles/ms/icons/green-dot.png',
              'lat': lat,
              'lng': lng,
