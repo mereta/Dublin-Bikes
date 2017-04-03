@@ -11,7 +11,7 @@ setup(
     version=0.1,
     description="Web app for occupancy of Dublin bike stations",
     author="Andrew Cameron, Liga Ozolina, Mereta Degutyte, Laura Boyles",
-    author_email="andrew.cameron1@ucdconnect.ie","liga.ozolina@ucdconnect.ie","mereta.degutyte@ucdconnect.ie","laura.boyles@ucdconnect.ie"
+    author_email="andrew.cameron1@ucdconnect.ie, liga.ozolina@ucdconnect.ie, mereta.degutyte@ucdconnect.ie, laura.boyles@ucdconnect.ie"
     keywords="Dublin bikes weather",
     packages=find_packages(),
     package_dir={"src": "src"},
