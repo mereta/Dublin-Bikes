@@ -60,6 +60,7 @@ def index():
 def main():
     args = get_args()
     app.config["SERVER_NAME"] = "127.0.0.1:"+str(args.port)
+    app.config["DEBUG"] = args.debug
     app.run()
 
 if __name__ == "__main__":
