@@ -1,14 +1,23 @@
+import argparse
+
 from flask import Flask, render_template, url_for
 from flask_googlemaps import GoogleMaps
 from flask_googlemaps import Map
+
 import LoadJSONdata
 
-try:
-    # when running locally...
-    import config
-except ImportError:
-    # when installed and running from the command line...
-    from . import config
+
+def get_args():
+    """all the argparse stuff.
+    params:  -
+    returns: namespace
+    """
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--port", dest="port", type=int)
+    parser.add_argument("--debug", dest="debug", action="store_true")
+    parser.set_defaults(port=80)
+    parser.set_defaults(debug=False)
+    return parser.parse_args()
 
 # Flask likes to know the name of the script calling it.
 app = Flask(__name__)
@@ -49,7 +58,8 @@ def index():
 
 
 def main():
-    app.config.from_object(config.DevelopmentConfig)
+    args = get_args()
+    app.config["SERVER_NAME"] = "127.0.0.1:"+str(args.port)
     app.run()
 
 if __name__ == "__main__":
