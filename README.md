@@ -10,7 +10,7 @@ Requires python3, pip, and git.
 
     $ dublin-bikes
 
-#### Optional parameters
+#### __Optional parameters__
 
 **Run with Flask's debug option set to true** (defaults to False)
 
