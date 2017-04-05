@@ -4,8 +4,11 @@ from flask import Flask, render_template, url_for
 from flask_googlemaps import GoogleMaps
 from flask_googlemaps import Map
 
-import LoadJSONdata
-
+try:
+    import LoadJSONdata
+except ImportError:
+    # when installed, import like this works
+    from . import LoadJSONdata
 
 def get_args():
     """all the argparse stuff.
