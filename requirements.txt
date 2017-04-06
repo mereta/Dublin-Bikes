@@ -5,3 +5,5 @@ Jinja2==2.9.5
 MarkupSafe==0.23
 Werkzeug==0.12.1
 flask-googlemaps==0.2.4
+boto==2.45.0
+boto3==1.4.4
