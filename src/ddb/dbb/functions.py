@@ -4,7 +4,7 @@ Created on 30 Mar 2017
 @author: liga
 '''
 from datetime import datetime
-from dbb import config as conf
+import src.ddb.dbb.config as conf
 import boto3
 from boto3.dynamodb.conditions import Key
 
@@ -79,7 +79,7 @@ def scanAll():
     return response
 
 
-scan("name", "eq", "JAMES STREET EAST", None)
-querry("JAMES STREET EAST", 1490979662000)
+scan("name", "eq", "DAME STREET", None)
+#querry("JAMES STREET EAST", 1490979662000)
 # scanAll()
 # printResp(response)
