@@ -6,7 +6,7 @@ Created on 30 Mar 2017
 from datetime import datetime
 import src.ddb.dbb.config as conf
 import boto3
-from boto3.dynamodb.conditions import Key
+from boto3.dynamodb.conditions import Key, Attr
 
 
 def connect():
@@ -30,15 +30,25 @@ def printResp(response):
         )
 
 
-def querry(primary_key, sort_key):
+def queryEq(station_name, time):
     """Querry finds rows with specified primary key and sort key values
     is faster because doesn't scan through whole table, returns python dictionary"""
 
     response = table(connect()).query(
-        KeyConditionExpression=Key('name').eq(primary_key) & Key(
-            "time_stamp").eq(sort_key),
+        KeyConditionExpression=Key('name').eq(station_name) & Key(
+            "time_stamp").eq(time),
     )
-    print(response)
+    printResp(response)
+    return response
+
+
+def queryBetween(station_name, time_from, time_to):
+    "Returns query for specified station name and time from and to. Returns a dictionary"
+
+    response = table(connect()).query(
+        KeyConditionExpression=Key('name').eq(station_name) & Key(
+            'time_stamp').between(time_from, time_to)
+    )
     printResp(response)
     return response
 
@@ -58,28 +68,37 @@ def scan(key, condition, value, value2):
         """
     # filter expressions
     if condition == "eq":
-        fe = Key(key).eq(value)
+        fe = Attr(key).eq(value)
     elif condition == "exists":
-        fe = Key(key).exists()
+        fe = Attr(key).exists()
     elif condition == "between":
-        fe = Key(key).between(value, value2)
+        fe = Attr(key).between(value, value2)
 
     response = table(connect()).scan(
         FilterExpression=fe,
     )
-    print(response)
-    printResp(response)
+
+    while 'LastEvaluatedKey' in response:
+        response = table(connect()).scan(
+            FilterExpression=fe,
+            ExclusiveStartKey=response['LastEvaluatedKey']
+        )
+        printResp(response)
     return response
 
 
 def scanAll():
     "Returns whole table as python dictionary "
+
     response = table(connect()).scan(Select='ALL_ATTRIBUTES')
-    printResp(response)
+    while 'LastEvaluatedKey' in response:
+        response = table(connect()).scan(
+            ExclusiveStartKey=response['LastEvaluatedKey']
+        )
+        printResp(response)
     return response
 
 
-scan("name", "eq", "DAME STREET", None)
-#querry("JAMES STREET EAST", 1490979662000)
+#scan("name", "eq", "DAME STREET", None)
+#queryEq("DAME STREET", 1490903091000)
 # scanAll()
-# printResp(response)
