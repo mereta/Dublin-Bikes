@@ -9,6 +9,20 @@ h1 {
   margin: 0;
   line-height: 61px;
 }
+span {
+  font-size: 31px;
+}
+h2 {
+    font-size: 16px;
+    font-weight: 300;
+    margin: 0;
+    line-height: 300px;
+    color: black;
+}
+p {
+    font-weight: 300;
+    font-size: 16px;
+  }
 .header {
   position:fixed;
   z-index: 1000;
@@ -17,4 +31,7 @@ h1 {
   width: 100%;
   padding: 0;
   background: #1D3649;
+}
+.instructions {
+  color: pink;
 }
