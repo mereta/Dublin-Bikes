@@ -1,8 +1,7 @@
 <!DOCTYPE html>
     <html>
     <head>
-            {{sndmap.js}}
-          <title>Dublin Bikes-Occupancy</title>
+          <title>Dublin Bikes Occupancy</title>
           <meta charset="UTF-8">
           <link rel="stylesheet" type="text/css" href= "{{ url_for('static', filename='css/style.css') }}">
     </head>
@@ -11,12 +10,9 @@
         <h1><b>Dublin</b>Bikes | <span>Occupancy Data</span></h1>
       </header>
         <section class="instructions">
-          <div class="map-instructions">
-        <h2> Click on Station for more info</h2>
-       </div>
+        <h2> Select station to view current occupancy</h2>
+          {{sndmap.js}}
+          {{sndmap.html}}
       </section>
-
-        {{sndmap.html}}
-
     </body>
-</html>
+    </html>
