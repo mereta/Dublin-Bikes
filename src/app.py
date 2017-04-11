@@ -165,7 +165,7 @@ def getChartData():
            saturdayTotal = saturdayTotal +1
            saturdayFree = saturdayFree + j[1]
            saturdayAvStands = saturdayAvStands + j[2]
-    print("RESULTS", sundayTotal, sundayFree, sundayAvStands)
+    #print("RESULTS", sundayTotal, sundayFree, sundayAvStands)
     #do stuff 
     #return json.dumps(data);
     sundayFreePcnt = int(((sundayFree/sundayTotal)/total_bike_stands)*100)
