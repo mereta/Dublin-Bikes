@@ -107,7 +107,7 @@ def getChartData():
     print("FINDME",location)
     data = functions.QueryByLocation(location)
     
-    dayArray= [['Sunday', 0], ['Monday', 0], ['Tuesday', 0], ['Wednesday', 0], ['Thursday', 0], ['Friday', 0], ['Saturday', 0]]
+    dayArray= [['Sunday', 0, 0], ['Monday', 0, 0], ['Tuesday', 0, 0], ['Wednesday', 0, 0], ['Thursday', 0, 0], ['Friday', 0, 0], ['Saturday', 0, 0]]
     myArray = []
 
         
@@ -178,13 +178,13 @@ def getChartData():
     
     print("SUN%", (sundayFreePcnt))
     
-    sundayAvStandsMean = sundayAvStands/sundayTotal
-    mondayAvStandsMean = mondayAvStands/mondayTotal
-    tuesdayAvStandsMean = tuesdayAvStands/tuesdayTotal
-    wednesdayAvStandsMean = wednesdayAvStands/wednesdayTotal
-    thursdayAvStandsMean = thursdayAvStands/thursdayTotal
-    fridayAvStandsMean = fridayAvStands/fridayTotal
-    saturdayAvStandsMean = saturdayAvStands/saturdayTotal
+    sundayAvStandsPcnt = int(((sundayAvStands/sundayTotal)/total_bike_stands)*100)
+    mondayAvStandsPcnt = int(((mondayAvStands/mondayTotal)/total_bike_stands)*100)
+    tuesdayAvStandsPcnt = int(((tuesdayAvStands/tuesdayTotal)/total_bike_stands)*100)
+    wednesdayAvStandsPcnt = int(((wednesdayAvStands/wednesdayTotal)/total_bike_stands)*100)
+    thursdayAvStandsPcnt = int(((thursdayAvStands/thursdayTotal)/total_bike_stands)*100)
+    fridayAvStandsPcnt = int(((fridayAvStands/fridayTotal)/total_bike_stands)*100)
+    saturdayAvStandsPcnt = int(((saturdayAvStands/saturdayTotal)/total_bike_stands)*100)
     
     dayArray[0][1] = int(sundayFreePcnt)
     dayArray[1][1] = int(mondayFreePcnt)
@@ -193,6 +193,14 @@ def getChartData():
     dayArray[4][1] = int(thursdayFreePcnt)
     dayArray[5][1] = int(fridayFreePcnt)
     dayArray[6][1] = int(saturdayFreePcnt)
+    
+    dayArray[0][2] = int(sundayAvStandsPcnt)
+    dayArray[1][2] = int(mondayAvStandsPcnt)
+    dayArray[2][2] = int(tuesdayAvStandsPcnt)
+    dayArray[3][2] = int(wednesdayAvStandsPcnt)
+    dayArray[4][2] = int(thursdayAvStandsPcnt)
+    dayArray[5][2] = int(fridayAvStandsPcnt)
+    dayArray[6][2] = int(saturdayAvStandsPcnt)
     
     #print("ARRAY", dayArray)
     

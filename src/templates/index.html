@@ -31,22 +31,33 @@
 		var data = new google.visualization.DataTable(JSON.parse(serverData));
     
         data.addColumn('string', 'Day');
-        data.addColumn('number', 'Average');
+        data.addColumn('number', 'Available Bikes');
+        data.addColumn('number', 'Available Bike Stands');
         data.addRows(JSON.parse(serverData));
       	
       
           var options = {
-          title: 'Weekly Dublin Bikes Occupancy',
+          //title: 'Weekly Dublin Bikes Occupancy',
           width: 900,
           height: 400,
-          legend: { position: 'none' },
-          chart: { subtitle: 'Average Percentage' },
+          //legend: { position: 'none' },
+          chart: {
+          title: ('Weekly Dublin Bikes Occupancy in ' + location),
+          subtitle: 'Average Percentage'
+          },
+          series: {
+          	0: { axis: 'free' }, //series=columnns in cahrt
+          	1: { axis: 'stands' }
+          },
           axes: {
             x: {
-              0: { side: 'top', label: ('Weekday Average Percentage of Free Bikes in ' + location) } // Top x-axis.
-            }
+            	0: { side: 'bottom', label: 'Weekday' } // Top x-axis. 
+            },
+            y: { 
+            	free: {label: 'Percentage'}
+            },
           },
-          bar: { groupWidth: "90%" }
+          bar: { groupWidth: "50%" }
         };
 
         
