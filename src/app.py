@@ -63,19 +63,7 @@ def get_icon_url(available_bikes, total_bike_stands):
 def index():
     '''This method retrieves data from the Dublin Bikes API, it itterates through the data
     and presents markers on a google map'''
-    
-    #data = functions.scan("name", "eq", "SMITHFIELD NORTH", None)
-    #print(data)
-    #data = functions.scan("name", "eq", "JAMES STREET EAST", None)
-    #data = functions.scan("name", "eq", "DAME STREET", None)
-    #data = functions.QueryByLocation("JAMES STREET EAST")
-    #print(data)
 
-    
-    #data = functions.querry("TALBOT STREET", )
-    #print(data)
-    
-    
     mydata = LoadJSONdata.GetLocationData()
     
     sndmap = Map("sndmap",mydata[0]["position"]["lat"], mydata[0]["position"]["lng"], style="height:600px;width:600px;margin:0;")
@@ -87,127 +75,92 @@ def index():
         free = obj['available_bikes']
         available_bike_stands = obj['available_bike_stands']
         total_bike_stands = obj['bike_stands']
-         
-        #print(name)  
-        #print(total_bike_stands)
           
     #Code reference: https://github.com/rochacbruno/Flask-GoogleMaps
-    
-        
-        #print(marker_file)
         sndmap.markers.append({'icon':get_icon_url(free, total_bike_stands), 'lat': lat, 'lng': lng,
                               'infobox': "<b>Name: " + name + "</b></br>Available Bikes: " + str(free) + "</br>Available Bike Stands: " + str(available_bike_stands) + '''<a onclick="drawChart(' '''  + str(name) + ''' ')" href=#>More Details</a>'''})
-      
-    #print(sndmap.markers)   
+        
     return render_template("index.html", sndmap=sndmap)
 
-@app.route("/getchartdata", methods=['POST'])
-def getChartData():
+#get daily data
+@app.route("/getdailychartdata", methods=['POST'])
+def getDailyChartData():
+    '''This function gets daily data back from the database based on a single location
+        This function returns the following:
+        DayOfWeek, %Available Bikes, %Available Bike Stands
+        in JSON format'''
+    
+    #Gets location from the form and queries database based on location clicked for all records
     location = request.form['location'].strip()
-    print("FINDME",location)
     data = functions.QueryByLocation(location)
     
-    dayArray= [['Sunday', 0, 0], ['Monday', 0, 0], ['Tuesday', 0, 0], ['Wednesday', 0, 0], ['Thursday', 0, 0], ['Friday', 0, 0], ['Saturday', 0, 0]]
-    myArray = []
-
-        
+    #Initialize arrays
+    dayArray = []
+    weekdayArray= [['Sunday', 0, 0], ['Monday', 0, 0], ['Tuesday', 0, 0], ['Wednesday', 0, 0], ['Thursday', 0, 0], ['Friday', 0, 0], ['Saturday', 0, 0]]
     
+    for i in range (1, 7 +1):
+         dayItem=[i, 0, 0, 0]
+         dayArray.append(dayItem) 
+         
+    #Iterate through data
+    for i in data["Items"]:          
+        dayOfWeek = datetime.fromtimestamp(int(i["time_stamp"]) / 1000).strftime('%w'),
+        free = int(i['free'])
+        available_bike_stands = int(i['available_bike_stands'])
+        total_bike_stands = int(i['bike_stands'])
+
+        #add record to running total, sums available bikes and sums available bikes stands per day of week.
+        dayArray[int(dayOfWeek[0][0])][3]= dayArray[int(dayOfWeek[0][0])][3]+1
+        dayArray[int(dayOfWeek[0][0])][1]= dayArray[int(dayOfWeek[0][0])][1]+free
+        dayArray[int(dayOfWeek[0][0])][2]= dayArray[int(dayOfWeek[0][0])][2]+available_bike_stands
+    
+    #Get average & calculate percentages of available bikes/bike stands
+    for i in range(0, 7):
+        weekdayArray[i][1]= int(((dayArray[i][1]/dayArray[i][3])/total_bike_stands)*100)
+        weekdayArray[i][2]= int(((dayArray[i][2]/dayArray[i][3])/total_bike_stands)*100)
+        
+    return json.dumps(weekdayArray)
+
+
+@app.route("/gethourlychartdata", methods=['POST'])
+def getHourlyChartData():
+    '''This function gets hourly data back from the database based on a single location
+        This function returns the following:
+        Hour, %Available Bikes, %Available Bike Stands
+        in JSON format'''
+    #Gets location from the form and queries database based on location clicked for all records
+    location = request.form['location'].strip()
+    data = functions.QueryByLocation(location)
+    
+    #Initialize arrays
+    hourArray = []
+    finalHourArray = []
+
+    for i in range (1, 24 +1):
+         hourItem=[i, 0, 0, 0]
+         finalHourItem= [i, 0, 0]
+         hourArray.append(hourItem)
+         finalHourArray.append(finalHourItem)
+         
+    #Iterate through data
     for i in data["Items"]:
-        #print(i["name"], "| free bikes |", i["free"], "| bike stands |", i["bike_stands"], "| free bike stands |", i["available_bike_stands"], "|", 
               
-        day = datetime.fromtimestamp(int(i["time_stamp"]) / 1000).strftime('%d'),
-        month = datetime.fromtimestamp(int(i["time_stamp"]) / 1000).strftime('%m'),
-        year = datetime.fromtimestamp(int(i["time_stamp"]) / 1000).strftime('%Y'),
-        dayOfWeek = datetime.fromtimestamp(int(i["time_stamp"]) / 1000).strftime('%a'),
+        hour = int(datetime.fromtimestamp(int(i["time_stamp"]) / 1000).strftime('%H'))
         free = int(i['free'])
         available_bike_stands = int(i['available_bike_stands'])
         total_bike_stands = int(i['bike_stands'])
         
-        item=[dayOfWeek, free, available_bike_stands]
-        myArray.append(item)
-    #print (myArray)
+        #Add record to running total, sum all available bikes/bike stands
+        hourArray[hour][3]= hourArray[hour][3]+1
+        hourArray[hour][1]= hourArray[hour][1]+free
+        hourArray[hour][2]= hourArray[hour][2]+available_bike_stands
     
-    mondayTotal, tuesdayTotal, wednesdayTotal, thursdayTotal, fridayTotal, saturdayTotal, sundayTotal, = 0, 0, 0, 0, 0, 0, 0
-    mondayFree, tuesdayFree, wednesdayFree, thursdayFree, fridayFree, saturdayFree, sundayFree, =  0, 0, 0, 0, 0, 0, 0
-    mondayAvStands, tuesdayAvStands, wednesdayAvStands, thursdayAvStands, fridayAvStands, saturdayAvStands, sundayAvStands, =  0, 0, 0, 0, 0, 0, 0
-    mondayFreeMean, tuesdayFreeMean, wednesdayFreeMean, thursdayFreeMean, fridayFreeMean, saturdayFreeMean, sundayFreeMean, = 0, 0, 0, 0, 0, 0, 0
-    mondayAvStandsMean, tuesdayAvStandsMean, wednesdayAvStandsMean, thursdayAvStandsMean, fridayAvStandsMean, saturdayAvStandsMean, sundayAvStandsMean, = 0, 0, 0, 0, 0, 0, 0
-    
-    for j in myArray:
-        #print("JAY", j[0])
-        #print("JAY ZERO ZERO", j[0][0])
-       
-        if j[0][0] == "Sun":
-           sundayTotal = sundayTotal +1
-           sundayFree = sundayFree + j[1]
-           sundayAvStands = sundayAvStands + j[2]
-        if j[0][0] == "Mon":
-           mondayTotal = mondayTotal +1
-           mondayFree = mondayFree + j[1]
-           mondayAvStands = mondayAvStands + j[2]
-        if j[0][0] == "Tue":
-           tuesdayTotal = tuesdayTotal +1
-           tuesdayFree = tuesdayFree + j[1]
-           tuesdayAvStands = tuesdayAvStands + j[2]
-        if j[0][0] == "Wed":
-           wednesdayTotal = wednesdayTotal +1
-           wednesdayFree = wednesdayFree + j[1]
-           wednesdayAvStands = wednesdayAvStands + j[2]
-        if j[0][0] == "Thu":
-           thursdayTotal = thursdayTotal +1
-           thursdayFree = thursdayFree + j[1]
-           thursdayAvStands = thursdayAvStands + j[2]
-        if j[0][0] == "Fri":
-           fridayTotal = fridayTotal +1
-           fridayFree = fridayFree + j[1]
-           fridayAvStands = fridayAvStands + j[2]
-        if j[0][0] == "Sat":
-           saturdayTotal = saturdayTotal +1
-           saturdayFree = saturdayFree + j[1]
-           saturdayAvStands = saturdayAvStands + j[2]
-    #print("RESULTS", sundayTotal, sundayFree, sundayAvStands)
-    #do stuff 
-    #return json.dumps(data);
-    sundayFreePcnt = int(((sundayFree/sundayTotal)/total_bike_stands)*100)
-    mondayFreePcnt = int(((mondayFree/mondayTotal)/total_bike_stands)*100)
-    tuesdayFreePcnt = int(((tuesdayFree/tuesdayTotal)/total_bike_stands)*100)
-    wednesdayFreePcnt = int(((wednesdayFree/wednesdayTotal)/total_bike_stands)*100)
-    thursdayFreePcnt = int(((thursdayFree/thursdayTotal)/total_bike_stands)*100)
-    fridayFreePcnt = int(((fridayFree/fridayTotal)/total_bike_stands)*100)
-    saturdayFreePcnt = int(((saturdayFree/saturdayTotal)/total_bike_stands)*100)
-    
-    print("SUN%", (sundayFreePcnt))
-    
-    sundayAvStandsPcnt = int(((sundayAvStands/sundayTotal)/total_bike_stands)*100)
-    mondayAvStandsPcnt = int(((mondayAvStands/mondayTotal)/total_bike_stands)*100)
-    tuesdayAvStandsPcnt = int(((tuesdayAvStands/tuesdayTotal)/total_bike_stands)*100)
-    wednesdayAvStandsPcnt = int(((wednesdayAvStands/wednesdayTotal)/total_bike_stands)*100)
-    thursdayAvStandsPcnt = int(((thursdayAvStands/thursdayTotal)/total_bike_stands)*100)
-    fridayAvStandsPcnt = int(((fridayAvStands/fridayTotal)/total_bike_stands)*100)
-    saturdayAvStandsPcnt = int(((saturdayAvStands/saturdayTotal)/total_bike_stands)*100)
-    
-    dayArray[0][1] = int(sundayFreePcnt)
-    dayArray[1][1] = int(mondayFreePcnt)
-    dayArray[2][1] = int(tuesdayFreePcnt)
-    dayArray[3][1] = int(wednesdayFreePcnt)
-    dayArray[4][1] = int(thursdayFreePcnt)
-    dayArray[5][1] = int(fridayFreePcnt)
-    dayArray[6][1] = int(saturdayFreePcnt)
-    
-    dayArray[0][2] = int(sundayAvStandsPcnt)
-    dayArray[1][2] = int(mondayAvStandsPcnt)
-    dayArray[2][2] = int(tuesdayAvStandsPcnt)
-    dayArray[3][2] = int(wednesdayAvStandsPcnt)
-    dayArray[4][2] = int(thursdayAvStandsPcnt)
-    dayArray[5][2] = int(fridayAvStandsPcnt)
-    dayArray[6][2] = int(saturdayAvStandsPcnt)
-    
-    #print("ARRAY", dayArray)
-    
-    return json.dumps(dayArray)
+    #Get average & calculate percentages of available bikes/bike stands
+    for i in range(0, 24):
+        finalHourArray[i][1]= int(((hourArray[i][1]/hourArray[i][3])/total_bike_stands)*100)
+        finalHourArray[i][2]= int(((hourArray[i][2]/hourArray[i][3])/total_bike_stands)*100)
 
-    
-    #(available_bikes / total_bike_stands) * 100
+    return json.dumps(finalHourArray)
 
 
 def main():
