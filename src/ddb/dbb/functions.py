@@ -77,25 +77,33 @@ def scan(key, condition, value, value2):
     response = table(connect()).scan(
         FilterExpression=fe,
     )
-
     while 'LastEvaluatedKey' in response:
         response = table(connect()).scan(
             FilterExpression=fe,
             ExclusiveStartKey=response['LastEvaluatedKey']
         )
-        printResp(response)
+    printResp(response)
+
+    return response
+
+
+def QueryByLocation(locationName):
+    """Query finds rows with specified primary key and sort key values
+    is faster because doesn't scan through whole table, returns python dictionary"""
+
+    response = table(connect()).query(
+        KeyConditionExpression=Key('name').eq(locationName))
     return response
 
 
 def scanAll():
     "Returns whole table as python dictionary "
-
     response = table(connect()).scan(Select='ALL_ATTRIBUTES')
     while 'LastEvaluatedKey' in response:
         response = table(connect()).scan(
             ExclusiveStartKey=response['LastEvaluatedKey']
         )
-        printResp(response)
+    printResp(response)
     return response
 
 
