@@ -78,7 +78,7 @@ def index():
           
     #Code reference: https://github.com/rochacbruno/Flask-GoogleMaps
         sndmap.markers.append({'icon':get_icon_url(free, total_bike_stands), 'lat': lat, 'lng': lng,
-                              'infobox': "<b>Name: " + name + "</b></br>Available Bikes: " + str(free) + "</br>Available Bike Stands: " + str(available_bike_stands) + '''<a onclick="drawChart(' '''  + str(name) + ''' ')" href=#>More Details</a>'''})
+                              'infobox': "<b>Name: " + name + "</b></br>Available Bikes: " + str(free) + "</br>Available Bike Stands: " + str(available_bike_stands) + '''<br><a onclick="drawChart(' '''  + str(name) + ''' ')" href=#>Occupancy Details</a></br>'''})
         
     return render_template("index.html", sndmap=sndmap)
 
