@@ -1,17 +1,141 @@
 <!DOCTYPE html>
     <html>
     <head>
-          
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>  
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
             {{sndmap.js}}
     </head>
     <body>
+      <script type="text/javascript">
+      
+      google.charts.load('current', {'packages':['bar']});
+      google.charts.setOnLoadCallback(drawChart);
+      
+		function runPyScript(location){
+		var str = String(location)
+        var jqXHR = $.ajax({
+            type: "POST",
+            url: "/getdailychartdata",
+            async: false,
+            data: { location: str }
+        });
+
+        return jqXHR.responseText;
+        
+        
+    }
+    
+    function runHourlyPyScript(location){
+		var str = String(location)
+        var jqXHR = $.ajax({
+            type: "POST",
+            url: "/gethourlychartdata",
+            async: false,
+            data: { location: str }
+        });
+
+        return jqXHR.responseText;
+        
+        
+    }
+    
+      function drawChart(location) {
+      
+      //Get daily chart Data
+      	var serverData = runPyScript(location)      	
+		var data = new google.visualization.DataTable(JSON.parse(serverData));
+    
+        data.addColumn('string', 'Day');
+        data.addColumn('number', 'Available Bikes');
+        data.addColumn('number', 'Available Bike Stands');
+        data.addRows(JSON.parse(serverData));
+      	
+          var options = {
+          //title: 'Weekly Dublin Bikes Occupancy',
+          width: 900,
+          height: 400,
+          //legend: { position: 'none' },
+          chart: {
+          title: ('Weekly Dublin Bikes Occupancy in ' + location),
+          subtitle: 'Average Percentage'
+          },
+          series: {
+          	0: { axis: 'free' }, //series=columnns in cahrt
+          	1: { axis: 'stands' }
+          },
+          axes: {
+            x: {
+            	0: { side: 'bottom', label: 'Weekday' } // Top x-axis. 
+            },
+            y: { 
+            	free: {label: 'Percentage Available Bikes'},
+            	stands: {side: 'right', label: 'Percentage Available Bike Stands'}
+            },
+          },
+          bar: { groupWidth: "90%" }
+        };
+		var chart = new google.charts.Bar(document.getElementById('barchart'));
+		chart.draw(data, options);
+		
+		
+		//Get Hourly chart data
+		var hourlyserverData = runHourlyPyScript(location)      	
+		var hourlydata = new google.visualization.DataTable(JSON.parse(hourlyserverData));
+    
+        hourlydata.addColumn('number', 'Hour');
+        hourlydata.addColumn('number', 'Available Bikes');
+        hourlydata.addColumn('number', 'Available Bike Stands');
+        hourlydata.addRows(JSON.parse(hourlyserverData));
+      	
+          var hourlyoptions = {
+          //title: 'Hourly Dublin Bikes Occupancy',
+          width: 1200,
+          height: 600,
+          //legend: { position: 'none' },
+          chart: {
+          title: ('Hourly Dublin Bikes Occupancy in ' + location),
+          subtitle: 'Average Percentage'
+          },
+          series: {
+          	0: { axis: 'free' }, //series=columnns in cahrt
+          	1: { axis: 'stands' }
+          },
+          axes: {
+            x: {
+            	0: { side: 'bottom', label: 'Hours(24)' } // Top x-axis. 
+            },
+            y: { 
+            	free: {label: 'Percentage Available Bikes'},
+            	stands: {side: 'right', label: 'Percentage Available Bike Stands'}
+            },
+          },
+          bar: { groupWidth: "90%" }
+        };
+		var hourlychart = new google.charts.Bar(document.getElementById('hourlybarchart'));
+		hourlychart.draw(hourlydata, hourlyoptions);
+      }
+    </script>
         <h1>Current Dublin Bikes Occupancy per Station</h1>
 
         <h2>Dublin Bikes Map</h2>
         <h3> Click on Station for more info: 
-        (Green  = at least one bike available)
-        (Red = No Bikes Available)</h3>
+        Percentage of bikes available: 
+         0-25% Red, 26-50% Orange, 51-75% Yellow, 76-100% Green
+        
+        </h3>
+	<div id="map">
         {{sndmap.html}}
+       </div>
+       
+<div id="barchart">
+	
+</div>
+
+<div id="hourlybarchart">
+	
+</div>
+
 
     </body>
 </html>
