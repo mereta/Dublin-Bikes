@@ -6,7 +6,6 @@ import json
 from datetime import datetime
 from flask_googlemaps import Map
 from flask import request
-import LoadJSONdata
 from ddb.dbb import functions
 from _symtable import FREE
 try:
