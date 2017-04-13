@@ -98,7 +98,7 @@ def getDailyChartData():
     # Gets location from the form and queries database based on location
     # clicked for all records
     location = request.form['location'].strip()
-    data = functions.QueryByLocation(location)
+    data = dynamo.QueryByLocation(location)
 
     # Initialize arrays
     dayArray = []
@@ -145,7 +145,7 @@ def getHourlyChartData():
     # Gets location from the form and queries database based on location
     # clicked for all records
     location = request.form['location'].strip()
-    data = functions.QueryByLocation(location)
+    data = dynamo.QueryByLocation(location)
 
     # Initialize arrays
     hourArray = []
