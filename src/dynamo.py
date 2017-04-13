@@ -4,10 +4,13 @@ Created on 30 Mar 2017
 @author: liga
 '''
 from datetime import datetime
-import dynamo_conf as conf
 import boto3
 from boto3.dynamodb.conditions import Key, Attr
 
+try:
+    import dynamo_conf as conf
+except ImportError:
+    from . import dynamo_conf as conf
 
 def connect():
     db = boto3.resource('dynamodb',
