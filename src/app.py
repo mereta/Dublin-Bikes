@@ -3,20 +3,18 @@ from datetime import datetime
 import decimal
 import json
 
-from flask import Flask, render_template, url_for
-from flask_googlemaps import GoogleMaps
-from flask_googlemaps import Map
-from flask import request
+from flask import Flask, render_template, url_for, request
+from flask_googlemaps import GoogleMaps, Map
 
 from _symtable import FREE
 
-# try:
-import LoadJSONdata
-import dbb
-# except ImportError:
+try:
+    import LoadJSONdata
+    import dynamo
+except ImportError:
     # when installed, import like this works
-#    from . import LoadJSONdata
-#    from . import dbb
+   from . import LoadJSONdata
+   from . import dynamo
     
 
 def get_args():
