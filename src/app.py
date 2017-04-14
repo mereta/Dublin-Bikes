@@ -101,21 +101,22 @@ def getDailyChartData():
     data = dynamo.QueryByLocation(location)
 
     # Initialize arrays
-    dayArray = []
     #[0]th = 1-7 corresponding to weekday
     #[1]st = total free bikes
     #[2]nd = total available bike stands
     #[3]rd = total of all entries needed to get the mean
-    
-    weekdayArray = [['Sunday', 0, 0], ['Monday', 0, 0], ['Tuesday', 0, 0], [
-        'Wednesday', 0, 0], ['Thursday', 0, 0], ['Friday', 0, 0], ['Saturday', 0, 0]]
+    dayArray = []
+
     #weekdayArray :
     #[0]th = Sunday/Monday etc.
     #[1]st = average percentage of free bikes per station
     #[2]nd = average percentage of available bike stands per station
+    weekdayArray = [['Sunday', 0, 0], ['Monday', 0, 0], ['Tuesday', 0, 0], [
+        'Wednesday', 0, 0], ['Thursday', 0, 0], ['Friday', 0, 0], ['Saturday', 0, 0]]
+
 
     
-    #creates 7 arrays with 4 elements, first element being 1-7 corresponding to day of week in each array
+    #In dayArray creates 7 sub-arrays with 4 elements, first element being 1-7 corresponding to day of week in each sub-array
     for i in range(1, 7 + 1):
         dayItem = [i, 0, 0, 0]
         dayArray.append(dayItem)
@@ -130,15 +131,12 @@ def getDailyChartData():
 
         # add record to running total, sums available bikes and sums available bikes stands per day of week
         
-        #uses day array with element 0 = day of week(1-7)
+        #uses day array with element 0 = day of week(1-7) - Sunday-Saturday
         #[0] = day of week, [1] = total of all free bikes/per station
         #[2] = total of all available bike stands per station, [3] = total number of entries for that station
-        dayArray[int(dayOfWeek[0][0])][3] = dayArray[int(
-            dayOfWeek[0][0])][3] + 1
-        dayArray[int(dayOfWeek[0][0])][1] = dayArray[int(
-            dayOfWeek[0][0])][1] + free
-        dayArray[int(dayOfWeek[0][0])][2] = dayArray[int(
-            dayOfWeek[0][0])][2] + available_bike_stands
+        dayArray[int(dayOfWeek[0][0])][3] = dayArray[int(dayOfWeek[0][0])][3] + 1
+        dayArray[int(dayOfWeek[0][0])][1] = dayArray[int(dayOfWeek[0][0])][1] + free
+        dayArray[int(dayOfWeek[0][0])][2] = dayArray[int(dayOfWeek[0][0])][2] + available_bike_stands
 
     # Get average & calculate percentages of available bikes/bike stands
     # sort by [0]th element, [3] = total entries
@@ -177,8 +175,8 @@ def getHourlyChartData():
     #[2]nd = average percentage of available bike stands per station
     
 
-    #creates 24 arrays for both hourArray & finalHourArray
-    #adds hour as [0]th element in both hourArray and finalHourArray
+    #creates 24 sub-arrays for both hourArray & finalHourArray
+    #adds hour as [0]th element in all sub-arrays in both hourArray and finalHourArray
     
     for i in range(1, 24 + 1):
         hourItem = [i, 0, 0, 0]
