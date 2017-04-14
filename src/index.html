@@ -41,6 +41,9 @@
     }
     
       function drawChart(location) {
+      var undef = null;
+      if (location !== undef){
+     
       
       //Get daily chart Data
       	var serverData = runPyScript(location)      	
@@ -114,6 +117,7 @@
         };
 		var hourlychart = new google.charts.Bar(document.getElementById('hourlybarchart'));
 		hourlychart.draw(hourlydata, hourlyoptions);
+      }
       }
     </script>
         <h1>Current Dublin Bikes Occupancy per Station</h1>
