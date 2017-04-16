@@ -2,4 +2,10 @@ h1 {
     color: blue;
 }
 
+#currentweather {
+    height: 100;
+    width: 80%;
+    border: 3px solid blue;
+}
+
 #sndmap { height:800px;width:800px;margin:0; }
