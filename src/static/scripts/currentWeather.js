@@ -13,12 +13,13 @@ function fetchJSON(url, responseObjectHandler) {
 }
 
 function iconSrc(iconName) {
-    return "http://openweathermap.org/img/w/" + iconName + ".png"; 
+    return "http://openweathermap.org/img/w/" + iconName + ".png";
 }
 
 function displayWeather(responseJson) {
     let div = document.getElementById("currentWeather");
-    
+    div.innerHTML = "Current Weather<br>";
+
     let img = document.createElement("img");
     img.src = iconSrc(responseJson.weather[0].icon);
     img.id = "weatherIcon";
@@ -34,5 +35,5 @@ window.onload = function () {
     const BASE_URL = "http://api.openweathermap.org/data/2.5/weather?q=";
     const UNITS = "metric";
     let url = BASE_URL + LOCATION + "&units=" + UNITS + "&appid=" + API_KEY;
-    fetchJSON(url, displayWeather); 
+    fetchJSON(url, displayWeather);
 }
