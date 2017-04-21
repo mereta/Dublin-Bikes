@@ -72,7 +72,7 @@ def index():
     mydata = LoadJSONdata.GetLocationData()
 
     sndmap = Map("sndmap", mydata[0]["position"]["lat"], mydata[0]
-                 ["position"]["lng"], style="height:500px;width:70%;margin:0;")
+                 ["position"]["lng"], style="height:500px;")
     for obj in mydata:
         name = obj["name"]
         lat = str(obj["position"]["lat"])
