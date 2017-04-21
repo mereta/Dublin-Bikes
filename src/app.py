@@ -219,9 +219,7 @@ def getHourlyChartData():
 
 def main():
     args = get_args()
-    app.config["SERVER_NAME"] = args.host + ":" + str(args.port)
-    app.config["DEBUG"] = args.debug
-    app.run(host=args.host)
+    app.run(host=args.host, port=args.port, debug=args.debug)
 
 
 if __name__ == "__main__":
