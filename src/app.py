@@ -13,9 +13,9 @@ try:
     import dynamo
 except ImportError:
     # when installed, import like this works
-   from . import LoadJSONdata
-   from . import dynamo
-    
+    from . import LoadJSONdata
+    from . import dynamo
+
 
 def get_args():
     """all the argparse stuff.
@@ -34,6 +34,7 @@ def get_args():
 
 # Flask likes to know the name of the script calling it.
 app = Flask(__name__)
+app.config['GOOGLEMAPS_KEY'] = "AIzaSyD6QVQToPw7ZOngdE5aJCmFczRpLSGh4-U"
 GoogleMaps(app)
 
 
@@ -109,20 +110,19 @@ def getDailyChartData():
     #[3]rd = total of all entries needed to get the mean
     dayArray = []
 
-    #weekdayArray :
+    # weekdayArray :
     #[0]th = Sunday/Monday etc.
     #[1]st = average percentage of free bikes per station
     #[2]nd = average percentage of available bike stands per station
     weekdayArray = [['Sunday', 0, 0], ['Monday', 0, 0], ['Tuesday', 0, 0], [
         'Wednesday', 0, 0], ['Thursday', 0, 0], ['Friday', 0, 0], ['Saturday', 0, 0]]
 
-
-    
-    #In dayArray creates 7 sub-arrays with 4 elements, first element being 1-7 corresponding to day of week in each sub-array
+    # In dayArray creates 7 sub-arrays with 4 elements, first element being
+    # 1-7 corresponding to day of week in each sub-array
     for i in range(1, 7 + 1):
         dayItem = [i, 0, 0, 0]
         dayArray.append(dayItem)
-    
+
     # Iterate through data
     for i in data["Items"]:
         dayOfWeek = datetime.fromtimestamp(
@@ -131,25 +131,31 @@ def getDailyChartData():
         available_bike_stands = int(i['available_bike_stands'])
         total_bike_stands = int(i['bike_stands'])
 
-        # add record to running total, sums available bikes and sums available bikes stands per day of week
-        
-        #uses day array with element 0 = day of week(1-7) - Sunday-Saturday
+        # add record to running total, sums available bikes and sums available
+        # bikes stands per day of week
+
+        # uses day array with element 0 = day of week(1-7) - Sunday-Saturday
         #[0] = day of week, [1] = total of all free bikes/per station
         #[2] = total of all available bike stands per station, [3] = total number of entries for that station
-        dayArray[int(dayOfWeek[0][0])][3] = dayArray[int(dayOfWeek[0][0])][3] + 1
-        dayArray[int(dayOfWeek[0][0])][1] = dayArray[int(dayOfWeek[0][0])][1] + free
-        dayArray[int(dayOfWeek[0][0])][2] = dayArray[int(dayOfWeek[0][0])][2] + available_bike_stands
+        dayArray[int(dayOfWeek[0][0])][3] = dayArray[int(
+            dayOfWeek[0][0])][3] + 1
+        dayArray[int(dayOfWeek[0][0])][1] = dayArray[int(
+            dayOfWeek[0][0])][1] + free
+        dayArray[int(dayOfWeek[0][0])][2] = dayArray[int(
+            dayOfWeek[0][0])][2] + available_bike_stands
 
     # Get average & calculate percentages of available bikes/bike stands
     # sort by [0]th element, [3] = total entries
-    #[1]st entry = total free bikes/ total entries gives you mean, then divide by total bike stands 
+    #[1]st entry = total free bikes/ total entries gives you mean, then divide by total bike stands
     # per that station and multiply by 100 to give (average) percentage of free bikes --> write to weekdayArray
-    # [2]nd entry = total available bike stands/ total entries gives you mean, then divide by total bike stands 
+    # [2]nd entry = total available bike stands/ total entries gives you mean, then divide by total bike stands
     # per that station and multiply by 100 to give (average) percentage of available bike stands --> write to weekdayArray
     # [0]th entry from day array matches to 'Sunday' 'Monday' etc via 1-7 correlation in weekdayArray
     for i in range(0, 7):
-        weekdayArray[i][1] = int(((dayArray[i][1] / dayArray[i][3]) / total_bike_stands) * 100) #free bikes
-        weekdayArray[i][2] = int(((dayArray[i][2] / dayArray[i][3]) / total_bike_stands) * 100) #available bike stnds
+        weekdayArray[i][1] = int(
+            ((dayArray[i][1] / dayArray[i][3]) / total_bike_stands) * 100)  # free bikes
+        weekdayArray[i][2] = int(
+            ((dayArray[i][2] / dayArray[i][3]) / total_bike_stands) * 100)  # available bike stnds
 
     return json.dumps(weekdayArray)
 
@@ -175,11 +181,11 @@ def getHourlyChartData():
     #[0]th = hour
     #[1]st = average percentage of free bikes per station
     #[2]nd = average percentage of available bike stands per station
-    
 
-    #creates 24 sub-arrays for both hourArray & finalHourArray
-    #adds hour as [0]th element in all sub-arrays in both hourArray and finalHourArray
-    
+    # creates 24 sub-arrays for both hourArray & finalHourArray
+    # adds hour as [0]th element in all sub-arrays in both hourArray and
+    # finalHourArray
+
     for i in range(1, 24 + 1):
         hourItem = [i, 0, 0, 0]
         finalHourItem = [i, 0, 0]
@@ -196,7 +202,7 @@ def getHourlyChartData():
         total_bike_stands = int(i['bike_stands'])
 
         # Add record to running total, sum all available bikes/bike stands
-        #uses hourArray with element 0 = corresponding to hour of day (1-24)
+        # uses hourArray with element 0 = corresponding to hour of day (1-24)
         #[0] = hour, [1] = total of all free bikes/per station
         #[2] = total of all available bike stands per station, [3] = total number of entries for that station
         hourArray[hour][3] = hourArray[hour][3] + 1
@@ -204,15 +210,18 @@ def getHourlyChartData():
         hourArray[hour][2] = hourArray[hour][2] + available_bike_stands
 
     # Get average & calculate percentages of available bikes/bike stands
-    
+
     # sort by [0]th element, [3] = total entries
-    #[1]st entry = total free bikes/ total entries gives you mean, then divide by total bike stands 
+    #[1]st entry = total free bikes/ total entries gives you mean, then divide by total bike stands
     # per that station and multiply by 100 to give (average) percentage of free bikes --> write to weekdayArray
-    # [2]nd entry = total available bike stands/ total entries gives you mean, then divide by total bike stands 
-    # per that station and multiply by 100 to give (average) percentage of available bike stands --> write to weekdayArray
+    # [2]nd entry = total available bike stands/ total entries gives you mean, then divide by total bike stands
+    # per that station and multiply by 100 to give (average) percentage of
+    # available bike stands --> write to weekdayArray
     for i in range(0, 24):
-        finalHourArray[i][1] = int(((hourArray[i][1] / hourArray[i][3]) / total_bike_stands) * 100) #free bikes
-        finalHourArray[i][2] = int(((hourArray[i][2] / hourArray[i][3]) / total_bike_stands) * 100) #available bike stands
+        finalHourArray[i][1] = int(
+            ((hourArray[i][1] / hourArray[i][3]) / total_bike_stands) * 100)  # free bikes
+        finalHourArray[i][2] = int(
+            ((hourArray[i][2] / hourArray[i][3]) / total_bike_stands) * 100)  # available bike stands
 
     return json.dumps(finalHourArray)
 
