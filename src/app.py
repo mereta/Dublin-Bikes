@@ -23,8 +23,10 @@ def get_args():
     returns: namespace
     """
     parser = argparse.ArgumentParser()
+    parser.add_argument("--host", dest="host", type=str)
     parser.add_argument("--port", dest="port", type=int)
     parser.add_argument("--debug", dest="debug", action="store_true")
+    parser.set_defaults(host="127.0.0.1")
     parser.set_defaults(port=5000)
     parser.set_defaults(debug=False)
     return parser.parse_args()
@@ -217,7 +219,7 @@ def getHourlyChartData():
 
 def main():
     args = get_args()
-    app.config["SERVER_NAME"] = "127.0.0.1:" + str(args.port)
+    app.config["SERVER_NAME"] = args.host + ":" + str(args.port)
     app.config["DEBUG"] = args.debug
     app.run()
 
