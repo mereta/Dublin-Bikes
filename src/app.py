@@ -40,10 +40,12 @@ GoogleMaps(app)
 
 def get_icon_url(available_bikes, total_bike_stands):
     """ Returns colour based on percentage occupancy:
-     0-25% Red
+     0% Purple
+     1-25% Red
     26-50% Orange
     51-75% Yellow
     76-100% Green
+
 
     params:
         available_bikes (int), total_bike_stands (int)
