@@ -221,7 +221,7 @@ def main():
     args = get_args()
     app.config["SERVER_NAME"] = args.host + ":" + str(args.port)
     app.config["DEBUG"] = args.debug
-    app.run()
+    app.run(host=args.host)
 
 
 if __name__ == "__main__":
